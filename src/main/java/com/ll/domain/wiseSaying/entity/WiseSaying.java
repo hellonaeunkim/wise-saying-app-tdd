@@ -15,8 +15,8 @@ public class WiseSaying {
     return id;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public String getAuthor() {
+    return author;
   }
 
   public String getContent() {
@@ -27,8 +27,8 @@ public class WiseSaying {
     this.content = content;
   }
 
-  public String getAuthor() {
-    return author;
+  public void setId(int id) {
+    this.id = id;
   }
 
   public void setAuthor(String author) {
