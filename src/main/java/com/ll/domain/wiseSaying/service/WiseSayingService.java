@@ -3,7 +3,6 @@ package com.ll.domain.wiseSaying.service;
 import com.ll.domain.wiseSaying.entity.WiseSaying;
 import com.ll.domain.wiseSaying.repository.WiseSayingRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WiseSayingService {
@@ -11,7 +10,7 @@ public class WiseSayingService {
   private final WiseSayingRepository wiseSayingRepository;
 
   public WiseSayingService() {
-    this.wiseSayingRepository = new wiseSayingRepository();
+    this.wiseSayingRepository = new WiseSayingRepository();
   }
 
 
@@ -23,5 +22,9 @@ public class WiseSayingService {
 
   public List<WiseSaying> findAll() {
     return wiseSayingRepository.findAll();
+  }
+
+  public boolean deleteById(int id) {
+    return wiseSayingRepository.deleteById(id);
   }
 }

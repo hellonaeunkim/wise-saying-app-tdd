@@ -30,6 +30,8 @@ public class App {
         wiseSayingController.actionAdd();
       } else if ("목록".equals(cmd)) {
         wiseSayingController.actionList();
+      } else if ("삭제?id=".equals(cmd)) {
+        wiseSayingController.actionDelete(cmd);
       }
     }
   }
