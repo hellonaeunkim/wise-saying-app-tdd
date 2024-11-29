@@ -16,6 +16,8 @@ public class Command {
 
         String queryString = cmdBits[1].trim();
 
+        if (queryString.isEmpty()) return;
+
         String[] params = queryString.split("&");
 
         for (String param : params) {
