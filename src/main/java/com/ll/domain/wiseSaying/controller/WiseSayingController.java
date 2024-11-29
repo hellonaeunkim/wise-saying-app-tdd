@@ -39,17 +39,19 @@ public class WiseSayingController {
 
   public void actionDelete(String cmd) {
 
+    String[] cmdBits = null;
     int id = 0;
 
     try {
-      id = Integer.parseInt(cmd.split("=")[1]);
+      cmdBits = cmd.split("\\?");
+      id = Integer.parseInt(cmdBits[1].split("=")[1]);
     } catch (Exception e) {
       System.out.println("명령어를 잘못 입력하셨습니다.");
       return;
     }
-    wiseSayingService.deleteById(id);
 
     boolean removed = wiseSayingService.deleteById(id);
+
     if (!removed) {
       System.out.println(id + "번 명언은 존재하지 않습니다.");
       return;

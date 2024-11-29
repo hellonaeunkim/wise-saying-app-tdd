@@ -23,7 +23,10 @@ public class App {
       System.out.println("명령) ");
       String cmd = scanner.nextLine();
 
-      switch (cmd) {
+      String[] cmdBits = cmd.split("\\?");
+      String actionName = cmdBits[0];
+
+      switch (actionName) {
         case "종료":
           systemController.actionExit();
           return;
@@ -33,7 +36,7 @@ public class App {
         case "목록":
           wiseSayingController.actionList();
           break;
-        case "삭제?id=":
+        case "삭제":
           wiseSayingController.actionDelete(cmd);
           break;
         default:
