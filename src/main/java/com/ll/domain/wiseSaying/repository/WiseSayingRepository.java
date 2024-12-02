@@ -18,6 +18,12 @@ public class WiseSayingRepository {
 
 
   public WiseSaying save(WiseSaying wiseSaying) {
+    // 메모리 저장 특성상 새 객체가 아니라면 딱히 할게 없다.
+    if (!wiseSaying.isNew()) {
+      return wiseSaying;
+    }
+
+    // 새로운 객체라면 id를 할당하고 리스트(wiseSayings)에 추가
     wiseSaying.setId(++lastId);
     wiseSayings.add(wiseSaying);
     return wiseSaying;
