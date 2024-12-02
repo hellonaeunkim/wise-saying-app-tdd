@@ -53,7 +53,6 @@ public class AppTest {
     app.run();
 
     String output = outputStream.toString();
-
     TestUtil.clearSetOutToByteArray(outputStream);
 
     return output;
