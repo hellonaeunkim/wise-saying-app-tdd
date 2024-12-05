@@ -3,6 +3,8 @@ package com.ll.standard.util;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Map;
+
 
 public class Util {
     public static class file {
@@ -92,6 +94,40 @@ public class Util {
                 return FileVisitResult.CONTINUE;
             }
         }
+
+    public static class json {
+        private json() {
+        }
+        public static String toString(Map<String, Object> map) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("{");
+            sb.append("\n");
+
+            map.forEach((key, value) -> {
+                sb.append("    ");
+                key = "\"" + key + "\"";
+
+                if (value instanceof String) {
+                    value = "\"" + value + "\"";
+                }
+
+                sb.append("%s: %s,\n".formatted(key, value));
+            });
+
+
+            if (!map.isEmpty()) {
+                // 마지막 ,와 \n 제거
+                sb.delete(sb.length() - 2, sb.length());
+            }
+
+            sb.append("\n");
+            sb.append("}");
+
+            return sb.toString();
+        }
+
     }
+}
 
 
