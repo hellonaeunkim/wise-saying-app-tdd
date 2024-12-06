@@ -85,7 +85,7 @@ public class JsonUtilTest {
     }
 
     @Test
-    @DisplayName("맵을 JSON으로 바꿀 수 있다.(논리 필드)")
+    @DisplayName("Map to JSON (논리 필드)")
     public void t5() {
         // given
         Map<String, Object> map = new LinkedHashMap<>();
@@ -110,7 +110,7 @@ public class JsonUtilTest {
     }
 
     @Test
-    @DisplayName("JSON to Map(필드 1개)")
+    @DisplayName("JSON to Map (필드 1개)")
     public void t6() {
         // given
         String jsonStr = """
@@ -124,5 +124,25 @@ public class JsonUtilTest {
 
         // then
         assertThat(map).containsEntry("name", "이름");
+    }
+
+    @Test
+    @DisplayName("JSON to Map (필드 2개)")
+    public void t7() {
+        // given
+        String jsonStr = """
+                {
+                    "name": "이름",
+                    "gender": "남자"
+                }
+                """.stripIndent().trim();
+
+        // when
+        Map<String, Object> map = Util.json.toMap(jsonStr);
+
+        // then
+        assertThat(map)
+                .containsEntry("name", "이름")
+                .containsEntry("gender", "남자");
     }
 }
