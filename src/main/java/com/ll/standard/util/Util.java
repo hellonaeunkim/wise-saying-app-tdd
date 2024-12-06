@@ -3,6 +3,7 @@ package com.ll.standard.util;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -127,6 +128,22 @@ public class Util {
             return sb.toString();
         }
 
+        public static Map<String, Object> toMap(String jsonStr) {
+            Map<String, Object> map = new LinkedHashMap<>();
+            jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
+            String[] jsonStrBits = jsonStr.split(",\n    \"");
+            for (String jsonStrBit : jsonStrBits) {
+                jsonStrBit = jsonStrBit.trim();
+                if (jsonStrBit.endsWith(",")) jsonStrBit = jsonStrBit.substring(0, jsonStrBit.length() - 1);
+                String[] jsonField = jsonStrBit.split("\": ");
+                String key = jsonField[0];
+                if (key.startsWith("\"")) key = key.substring(1);
+                String value = jsonField[1].substring(1, jsonField[1].length() - 1);
+                map.put(key, value);
+            }
+            return map;
+
+        }
     }
 }
 
