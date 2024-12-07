@@ -2,10 +2,7 @@ package com.ll.domain.wiseSaying.repository;
 
 import com.ll.domain.wiseSaying.entity.WiseSaying;
 import com.ll.standard.util.Util;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Map;
 
@@ -14,15 +11,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WiseSayingFileRepositoryTest {
     private final WiseSayingRepository wiseSayingRepository = new WiseSayingFileRepository();
 
-    @BeforeAll
-    public static void beforeAll() {
-        Util.file.rmdir("db");
-        Util.file.mkdir("db");
+    @BeforeEach
+    public void beforeEach() {
+        Util.file.rmdir(WiseSayingFileRepository.getTableDirPath());
     }
 
-    @AfterAll
-    public static void afterAll() {
-        Util.file.rmdir("db");
+    @AfterEach
+    public void afterEach() {
+        Util.file.rmdir(WiseSayingFileRepository.getTableDirPath());
     }
 
     @Test
@@ -32,7 +28,7 @@ public class WiseSayingFileRepositoryTest {
         wiseSayingRepository.save(wiseSaying);
 
         // 1.json 파일에 명언이 저장되었는지 확인
-        String filePath = "db/test/wiseSaying/1.json";
+        String filePath = WiseSayingFileRepository.getRowFilePath(wiseSaying.getId());
 
         assertThat(
                 Util.file.exists(filePath)
@@ -45,7 +41,22 @@ public class WiseSayingFileRepositoryTest {
         WiseSaying wiseSayingRestored = new WiseSaying(wiseSayingMap);
 
         assertThat(wiseSayingRestored).isEqualTo(wiseSaying);
+    }
 
+    @Test
+    @DisplayName("명언 삭제")
+    public void t2() {
+        WiseSaying wiseSaying = new WiseSaying(0, "꿈을 지녀라. 그러면 어려운 현실을 이길 수 있다.", "괴테");
+        wiseSayingRepository.save(wiseSaying);
+
+        wiseSayingRepository.deleteById(wiseSaying.getId());
+
+        String filePath = WiseSayingFileRepository.getRowFilePath(wiseSaying.getId());
+
+        // 1.json 파일이 없는지 확인
+        assertThat(
+                Util.file.exists(filePath)
+        ).isFalse();
 
     }
 }

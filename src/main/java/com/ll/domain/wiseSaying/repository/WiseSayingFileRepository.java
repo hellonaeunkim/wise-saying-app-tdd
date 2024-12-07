@@ -12,6 +12,15 @@ public class WiseSayingFileRepository implements WiseSayingRepository{
   private int lastId;
   private final List<WiseSaying> wiseSayings;
 
+  // .json 파일 경로를 받아오는 method
+  public static String getTableDirPath() {
+    return "db/test/wiseSaying";
+  }
+
+  public static String getRowFilePath(int id) {
+    return getTableDirPath() + "/" + id + ".json";
+  }
+
   public WiseSayingFileRepository() {
     this.lastId = 0;
     this.wiseSayings = new ArrayList<>();
@@ -31,7 +40,7 @@ public class WiseSayingFileRepository implements WiseSayingRepository{
     // json 형식으로 저장될 Map을 toString method를 통해 JSON으로 변경
     String jsonStr = Util.json.toString(wiseSaying.toMap());
     // json 형식 파일로 저장
-    Util.file.set("db/test/wiseSaying/1.json", jsonStr);
+    Util.file.set(getRowFilePath(wiseSaying.getId()), jsonStr);
 
     return wiseSaying;
   }
@@ -41,7 +50,7 @@ public class WiseSayingFileRepository implements WiseSayingRepository{
   }
 
   public boolean deleteById(int id) {
-    return wiseSayings.removeIf(wiseSaying -> wiseSaying.getId() == id);
+    return Util.file.delete(getRowFilePath(id));
   }
 
     public Optional<WiseSaying> findById(int id) {
