@@ -1,6 +1,7 @@
 package com.ll.domain.wiseSaying.repository;
 
 import com.ll.domain.wiseSaying.entity.WiseSaying;
+import com.ll.standard.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,13 @@ public class WiseSayingFileRepository implements WiseSayingRepository{
 
     // 새로운 객체라면 id를 할당하고 리스트(wiseSayings)에 추가
     wiseSaying.setId(++lastId);
-    wiseSayings.add(wiseSaying);
+
+    // toMap() method를 통해 wiseSaying을 Map으로 변환
+    // json 형식으로 저장될 Map을 toString method를 통해 JSON으로 변경
+    String jsonStr = Util.json.toString(wiseSaying.toMap());
+    // json 형식 파일로 저장
+    Util.file.set("db/test/wiseSaying/1.json", jsonStr);
+
     return wiseSaying;
   }
 
