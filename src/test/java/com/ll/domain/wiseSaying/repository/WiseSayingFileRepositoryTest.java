@@ -2,9 +2,12 @@ package com.ll.domain.wiseSaying.repository;
 
 import com.ll.domain.wiseSaying.entity.WiseSaying;
 import com.ll.standard.util.Util;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,20 +30,12 @@ public class WiseSayingFileRepositoryTest {
         WiseSaying wiseSaying = new WiseSaying(0, "꿈을 지녀라. 그러면 어려운 현실을 이길 수 있다.", "괴테");
         wiseSayingRepository.save(wiseSaying);
 
-        // 1.json 파일에 명언이 저장되었는지 확인
-        String filePath = WiseSayingFileRepository.getRowFilePath(wiseSaying.getId());
+        Optional<WiseSaying> opWiseSaying = wiseSayingRepository.findById(wiseSaying.getId());
 
+        // 조회된 명언이 원래 객체와 동일한지 확인
         assertThat(
-                Util.file.exists(filePath)
-        ).isTrue();
-
-        // 파일 읽어와서 Map 형태로 바뀌는지 Test
-        String jsonStr = Util.file.get(filePath,"");
-        Map<String, Object> wiseSayingMap = Util.json.toMap(jsonStr);
-        // WiseSaying 생성자로 Map을 입력
-        WiseSaying wiseSayingRestored = new WiseSaying(wiseSayingMap);
-
-        assertThat(wiseSayingRestored).isEqualTo(wiseSaying);
+                opWiseSaying.get()
+        ).isEqualTo(wiseSaying);
     }
 
     @Test
@@ -57,6 +52,21 @@ public class WiseSayingFileRepositoryTest {
         assertThat(
                 Util.file.exists(filePath)
         ).isFalse();
+
+    }
+
+    @Test
+    @DisplayName("명언 단건조회")
+    public void t3() {
+        WiseSaying wiseSaying = new WiseSaying(0, "꿈을 지녀라. 그러면 어려운 현실을 이길 수 있다.", "괴테");
+        wiseSayingRepository.save(wiseSaying);
+
+        Optional<WiseSaying> opWiseSaying = wiseSayingRepository.findById(wiseSaying.getId());
+
+        // 조회된 명언이 원래 객체와 동일한지 확인
+        assertThat(
+                opWiseSaying.get()
+        ).isEqualTo(wiseSaying);
 
     }
 }
