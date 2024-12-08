@@ -6,7 +6,6 @@ import com.ll.standard.util.Util;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class WiseSayingFileRepository implements WiseSayingRepository{
@@ -25,22 +24,23 @@ public class WiseSayingFileRepository implements WiseSayingRepository{
     }
 
   public WiseSaying save(WiseSaying wiseSaying) {
-    // 메모리 저장 특성상 새 객체가 아니라면 딱히 할게 없다.
-        if (!wiseSaying.isNew()) {
-            return wiseSaying;
+      // 현재 wiseSaying 객체가 새로운 객체(기존에 저장된 적 없는)인지 확인
+      // isNew()는 일반적으로 id == 0 일 때 true를 반환
+      boolean isNew =  wiseSaying.isNew();
+
+      // 새 객체라면 새로운 ID 할당
+      // getLastId()로 마지막으로 사용된 ID를 가져와 +1을 해 새로운 ID를 부여
+      if (isNew) {
+            wiseSaying.setId(getLastId() + 1);
         }
 
-        int id = getLastId() + 1;
-
-        wiseSaying.setId(id);
-
-        // toMap() method를 통해 wiseSaying을 Map으로 변환
-        // json 형식으로 저장될 Map을 toString method를 통해 JSON으로 변경
-        String jsonStr = Util.json.toString(wiseSaying.toMap());
+        String jsonStr = wiseSaying.toJsonStr();
         // json 형식 파일로 저장
         Util.file.set(getRowFilePath(wiseSaying.getId()), jsonStr);
 
-        setLastId(id);
+      if (isNew) {
+          setLastId(wiseSaying.getId());
+      }
 
         return wiseSaying;
         }
@@ -52,8 +52,6 @@ public class WiseSayingFileRepository implements WiseSayingRepository{
                   getTableDirPath(), "\\d+\\.json"
         )        // 각 파일 경로에서 JSON 문자열을 읽어옴
                  .map(path -> Util.file.get(path.toString(), ""))
-                 // JSON 문자열을 Map<String, Object>로 변환
-                 .map(Util.json::toMap)
                  // Map 데이터를 기반으로 WiseSaying 객체 생성
                  .map(WiseSaying::new)
                  // 스트림을 List<WiseSaying>로 변환
@@ -83,9 +81,8 @@ public class WiseSayingFileRepository implements WiseSayingRepository{
           if (jsonStr.isEmpty()) {
               return Optional.empty();
           }
-          Map<String, Object> wiseSayingMap = Util.json.toMap(jsonStr);
 
-          return Optional.of(new WiseSaying(wiseSayingMap));
+          return Optional.of(new WiseSaying(jsonStr));
         }
 
         public int getLastId() {
