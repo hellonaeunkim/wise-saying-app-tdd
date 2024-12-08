@@ -5,6 +5,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 
 public class Util {
@@ -38,12 +39,46 @@ public class Util {
             }
         }
 
+        public static void set(String filePath, int content) {
+            set(filePath, String.valueOf(content));
+        }
+
         // 파일 내용을 읽어옴. 파일이 없으면 기본값 반환
         public static String get(String filePath, String defaultValue) {
             try {
                 return Files.readString(getPath(filePath)); // 파일 내용 읽기
             } catch (IOException e) {
                 return defaultValue; // 파일이 없거나 읽기 실패 시 기본값 반환
+            }
+        }
+
+        public static int getAsInt(String filePath, int defaultValue) {
+            // filePath 경로에 있는 파일 내용을 가져와 content에 저장
+            // 만약 파일이 없거나 읽을 수 없으면 기본값 ""(빈 문자열) 반환
+            String content = get(filePath, "");
+
+            if (content.isBlank()) {
+                return defaultValue;
+            }
+
+            try {
+                return Integer.parseInt(content);
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
+        }
+
+        // 파일 삭제를 처리하는 클래스: 재귀적으로 디렉토리 및 파일 삭제
+        private static class FileDeleteVisitor extends SimpleFileVisitor<Path> {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
             }
         }
 
@@ -96,20 +131,17 @@ public class Util {
                     throw new RuntimeException("파일 접근 실패: " + path, e);
                 }
             }
+
+        public static Stream<Path> walkRegularFiles(String dirPath, String fileNameRegex) throws IOException{
+            // "db/test/wiseSaying" 디렉토리를 탐색하여 모든 파일 경로를 스트림으로 가져옴
+            return Files.walk(Path.of(dirPath))
+                    // 정규 파일만 필터링 (디렉토리 제외)
+                    .filter(Files::isRegularFile)
+                    // 파일 이름이 숫자.json 형식인지 확인 (예: 1.json, 2.json)
+                    .filter(path -> path.getFileName().toString().matches(fileNameRegex));
+
         }
-        // 파일 삭제를 처리하는 클래스: 재귀적으로 디렉토리 및 파일 삭제
-        private static class FileDeleteVisitor extends SimpleFileVisitor<Path> {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        }
+    }
 
     public static class json {
         private json() {
