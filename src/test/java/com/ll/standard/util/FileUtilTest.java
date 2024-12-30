@@ -47,7 +47,7 @@ public class FileUtilTest {
 
     @Test
     @DisplayName("파일을 삭제할 수 있다.")
-    public void t3 () {
+    public void t3() {
         String filePath = "temp/test.txt";
 
         Util.file.touch(filePath);
@@ -60,7 +60,7 @@ public class FileUtilTest {
 
     @Test
     @DisplayName("파일을 생성할 수 있다, 만약 경로의 폴더가 없다면 만든다.")
-    public void t4 () {
+    public void t4() {
         String filePath = "temp/temp/test.txt";
 
         Util.file.touch(filePath);

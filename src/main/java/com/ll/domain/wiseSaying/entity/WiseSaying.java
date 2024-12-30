@@ -14,35 +14,35 @@ import java.util.Map;
 @Setter
 @EqualsAndHashCode
 public class WiseSaying {
-  private int id;
-  private String content;
-  private String author;
+    private int id;
+    private String content;
+    private String author;
 
-  public WiseSaying (Map<String, Object> map) {
-      this.id = (int) map.get("id");
-      this.content = (String) map.get("content");
-      this.author = (String) map.get("author");
-  }
-
-  public WiseSaying (String jsonStr) {
-       this(Util.json.toMap(jsonStr));
+    public WiseSaying(Map<String, Object> map) {
+        this.id = (int) map.get("id");
+        this.content = (String) map.get("content");
+        this.author = (String) map.get("author");
     }
 
-  public boolean isNew() {
-      return id == 0;
-  }
+    public WiseSaying(String jsonStr) {
+        this(Util.json.toMap(jsonStr));
+    }
 
-  public Map<String, Object> toMap() {
-      Map<String, Object> map = new LinkedHashMap<>();
+    public boolean isNew() {
+        return id == 0;
+    }
 
-      map.put("id", id);
-      map.put("content", content);
-      map.put("author", author);
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new LinkedHashMap<>();
 
-      return map;
-  }
+        map.put("id", id);
+        map.put("content", content);
+        map.put("author", author);
 
-  // 현재 객체를 -> Map으로 변환 후 -> JSON으로 변환
+        return map;
+    }
+
+    // 현재 객체를 -> Map으로 변환 후 -> JSON으로 변환
     public String toJsonStr() {
         return Util.json.toString(toMap());
     }

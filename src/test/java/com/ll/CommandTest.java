@@ -43,8 +43,8 @@ public class CommandTest {
 
     @Test
     @DisplayName("""
-        cmd.getParamAsInt("id", 0)
-        """)
+            cmd.getParamAsInt("id", 0)
+            """)
     public void t5() {
         Command cmd = new Command("삭제?id=10");
         assertThat(cmd.getParamAsInt("id", 0)).isEqualTo(10);
@@ -52,8 +52,8 @@ public class CommandTest {
 
     @Test
     @DisplayName("""
-        cmd.getParamAsInt("number", 0)
-        """)
+            cmd.getParamAsInt("number", 0)
+            """)
     public void t6() {
         Command cmd = new Command("삭제?id=10");
         assertThat(cmd.getParamAsInt("number", 0)).isEqualTo(0);
@@ -61,9 +61,9 @@ public class CommandTest {
 
     @Test
     @DisplayName("""
-        cmd.getParamAsInt("number", 0) == 10
-        and cmd.getParam("name") == "Paul"
-        """)
+            cmd.getParamAsInt("number", 0) == 10
+            and cmd.getParam("name") == "Paul"
+            """)
     public void t7() {
         Command cmd = new Command("목록?number=10&name=Paul");
         assertThat(cmd.getParamAsInt("number", 0)).isEqualTo(10);
@@ -72,8 +72,8 @@ public class CommandTest {
 
     @Test
     @DisplayName("""
-        new Command("목록? "); does not throw Exception
-        """)
+            new Command("목록? "); does not throw Exception
+            """)
     public void t8() {
         Command cmd = new Command("목록? ");
     }

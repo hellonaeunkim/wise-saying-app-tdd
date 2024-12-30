@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public interface WiseSayingRepository {
 
-  WiseSaying save(WiseSaying wiseSaying);
+    WiseSaying save(WiseSaying wiseSaying);
 
-  List<WiseSaying> findAll();
+    List<WiseSaying> findAll();
 
-  boolean deleteById(int id);
+    boolean deleteById(int id);
 
-  Optional<WiseSaying> findById(int id);
+    Optional<WiseSaying> findById(int id);
 }

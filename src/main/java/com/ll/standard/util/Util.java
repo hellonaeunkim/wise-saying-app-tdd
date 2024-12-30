@@ -75,6 +75,7 @@ public class Util {
                 Files.delete(file);
                 return FileVisitResult.CONTINUE;
             }
+
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                 Files.delete(dir);
@@ -101,44 +102,45 @@ public class Util {
             }
         }
 
-            // 디렉토리 제거 (파일과 동일한 로직 사용)
-            public static boolean rmdir(String dirPath) {
-                return delete(dirPath);
-            }
-            // 내부 유틸리티 메서드: 경로를 `Path` 객체로 변환
-            private static Path getPath(String filePath) {
-                return Paths.get(filePath);
-            }
+        // 디렉토리 제거 (파일과 동일한 로직 사용)
+        public static boolean rmdir(String dirPath) {
+            return delete(dirPath);
+        }
 
-            // 파일 쓰기 로직. 파일이 없으면 생성, 기존 파일이 있으면 덮어씀
-            private static void writeFile(Path path, String content) throws IOException {
-                Files.writeString(path, content,
-                        StandardOpenOption.CREATE,             // 파일이 없으면 생성
-                        StandardOpenOption.TRUNCATE_EXISTING); // 기존 내용 제거
-            }
+        // 내부 유틸리티 메서드: 경로를 `Path` 객체로 변환
+        private static Path getPath(String filePath) {
+            return Paths.get(filePath);
+        }
 
-            // 파일 쓰기 실패 시 처리 로직 (부모 디렉토리 생성 후 재시도)
-            private static void handleFileWriteError(Path path, String content, IOException e) {
-                Path parentDir = path.getParent(); // 부모 디렉토리 경로 가져오기
-                if (parentDir != null && Files.notExists(parentDir)) {
-                    try {
-                        Files.createDirectories(parentDir);  // 부모 디렉토리 생성
-                        writeFile(path, content);           // 다시 파일 쓰기 시도
-                    } catch (IOException ex) {
-                        throw new RuntimeException("파일 쓰기 실패: " + path, ex);
-                    }
-                } else {
-                    throw new RuntimeException("파일 접근 실패: " + path, e);
+        // 파일 쓰기 로직. 파일이 없으면 생성, 기존 파일이 있으면 덮어씀
+        private static void writeFile(Path path, String content) throws IOException {
+            Files.writeString(path, content,
+                    StandardOpenOption.CREATE,             // 파일이 없으면 생성
+                    StandardOpenOption.TRUNCATE_EXISTING); // 기존 내용 제거
+        }
+
+        // 파일 쓰기 실패 시 처리 로직 (부모 디렉토리 생성 후 재시도)
+        private static void handleFileWriteError(Path path, String content, IOException e) {
+            Path parentDir = path.getParent(); // 부모 디렉토리 경로 가져오기
+            if (parentDir != null && Files.notExists(parentDir)) {
+                try {
+                    Files.createDirectories(parentDir);  // 부모 디렉토리 생성
+                    writeFile(path, content);           // 다시 파일 쓰기 시도
+                } catch (IOException ex) {
+                    throw new RuntimeException("파일 쓰기 실패: " + path, ex);
                 }
+            } else {
+                throw new RuntimeException("파일 접근 실패: " + path, e);
             }
+        }
 
-        public static Stream<Path> walkRegularFiles(String dirPath, String fileNameRegex) throws IOException{
+        public static Stream<Path> walkRegularFiles(String dirPath, String fileNameRegex) throws IOException {
             // "db/test/wiseSaying" 디렉토리를 탐색하여 모든 파일 경로를 스트림으로 가져옴
             return Files.walk(Path.of(dirPath))
-                    // 정규 파일만 필터링 (디렉토리 제외)
-                    .filter(Files::isRegularFile)
-                    // 파일 이름이 숫자.json 형식인지 확인 (예: 1.json, 2.json)
-                    .filter(path -> path.getFileName().toString().matches(fileNameRegex));
+                           // 정규 파일만 필터링 (디렉토리 제외)
+                           .filter(Files::isRegularFile)
+                           // 파일 이름이 숫자.json 형식인지 확인 (예: 1.json, 2.json)
+                           .filter(path -> path.getFileName().toString().matches(fileNameRegex));
 
         }
     }
@@ -146,6 +148,7 @@ public class Util {
     public static class json {
         private json() {
         }
+
         // Map 객체를 JSON 문자열로 변환
         public static String toString(Map<String, Object> map) {
             StringBuilder sb = new StringBuilder();

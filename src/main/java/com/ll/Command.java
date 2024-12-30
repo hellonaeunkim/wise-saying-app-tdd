@@ -29,6 +29,7 @@ public class Command {
         }
 
     }
+
     // 액션 이름 반환 (예: "삭제", "등록")
     public String getActionName() {
         return actionName;
@@ -38,15 +39,15 @@ public class Command {
         return params.get(key);
     }
 
-        // Overloading
-        public String getParam (String key, String defaultValue){
-            return params.getOrDefault(key, defaultValue);
-        }
+    // Overloading
+    public String getParam(String key, String defaultValue) {
+        return params.getOrDefault(key, defaultValue);
+    }
 
     public int getParamAsInt(String key, int defaultValue) {
         String value = getParam(key);
 
-        if ( value == null ) return defaultValue;
+        if (value == null) return defaultValue;
 
         try {
             return Integer.parseInt(value);
